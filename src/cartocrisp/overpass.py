@@ -11,6 +11,7 @@ from cartocrisp.bbox import BBox
 DEFAULT_MIRRORS = (
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.osm.ch/api/interpreter",
 )
 DEFAULT_CACHE_PATH = Path.home() / ".cache" / "cartocrisp" / "overpass_cache.sqlite3"
 # Real dense-city-center queries were measured at 27-37s against a healthy
