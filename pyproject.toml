@@ -1,0 +1,26 @@
+[project]
+name = "cartocrisp"
+version = "0.1.0"
+description = "Generate crisp, infinitely-zoomable vector map snapshots from a map link"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "httpx>=0.27",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "reportlab>=4.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+cartocrisp = "cartocrisp.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cartocrisp"]
