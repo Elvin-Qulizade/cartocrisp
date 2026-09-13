@@ -26,6 +26,13 @@ class UnrecognizedLinkError(Exception):
         super().__init__(f"Could not parse a location from: {raw_input}")
 
 
+class LinkResolutionError(Exception):
+    def __init__(self, raw_input: str, reason: str):
+        self.raw_input = raw_input
+        self.reason = reason
+        super().__init__(f"Could not resolve shortened link {raw_input}: {reason}")
+
+
 def parse_link(raw_input: str) -> ParsedLocation:
     """Parse a Google Maps URL, an OSM URL, or a plain 'lat,lon,zoom' string."""
     match = _GOOGLE_AT_RE.search(raw_input)
@@ -59,5 +66,8 @@ def resolve_short_link(raw_input: str, http_client: httpx.Client | None = None) 
         return raw_input
 
     client = http_client or httpx.Client(follow_redirects=True, timeout=10.0)
-    response = client.get(raw_input)
+    try:
+        response = client.get(raw_input)
+    except httpx.HTTPError as exc:
+        raise LinkResolutionError(raw_input, str(exc)) from exc
     return str(response.url)

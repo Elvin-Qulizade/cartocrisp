@@ -6,7 +6,7 @@ from pathlib import Path
 from cartocrisp.bbox import AreaTooLargeError, compute_bbox
 from cartocrisp.geometry import build_layers
 from cartocrisp.i18n import translate
-from cartocrisp.link_parser import UnrecognizedLinkError, parse_link, resolve_short_link
+from cartocrisp.link_parser import LinkResolutionError, UnrecognizedLinkError, parse_link, resolve_short_link
 from cartocrisp.overpass import OverpassClient, OverpassUnavailableError
 from cartocrisp.render.pdf import render_pdf
 from cartocrisp.render.svg import write_svg
@@ -27,7 +27,13 @@ class GenerationError(Exception):
 
 def generate(raw_link: str, options: GenerateOptions, overpass_client: OverpassClient | None = None) -> Path:
     client = overpass_client or OverpassClient()
-    resolved_link = resolve_short_link(raw_link)
+
+    try:
+        resolved_link = resolve_short_link(raw_link)
+    except LinkResolutionError as exc:
+        raise GenerationError(
+            translate(options.locale, "error.link_resolution_failed", input=exc.raw_input, reason=exc.reason)
+        ) from exc
 
     try:
         location = parse_link(resolved_link)

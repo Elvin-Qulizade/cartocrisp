@@ -1,7 +1,13 @@
 import httpx
 import pytest
 
-from cartocrisp.link_parser import ParsedLocation, UnrecognizedLinkError, parse_link, resolve_short_link
+from cartocrisp.link_parser import (
+    LinkResolutionError,
+    ParsedLocation,
+    UnrecognizedLinkError,
+    parse_link,
+    resolve_short_link,
+)
 
 GOOGLE_AT = "https://www.google.com/maps/@40.4093,49.8671,16z"
 GOOGLE_PLACE = (
@@ -74,3 +80,16 @@ def test_resolve_short_link_follows_redirect():
 def test_resolve_short_link_passes_through_normal_links():
     resolved = resolve_short_link(GOOGLE_AT)
     assert resolved == GOOGLE_AT
+
+
+def test_resolve_short_link_raises_link_resolution_error_on_connection_failure():
+    def handler(request):
+        raise httpx.ConnectError("connection refused")
+
+    client = httpx.Client(transport=httpx.MockTransport(handler), follow_redirects=True)
+
+    with pytest.raises(LinkResolutionError) as exc_info:
+        resolve_short_link("https://maps.app.goo.gl/abc123", http_client=client)
+
+    assert exc_info.value.raw_input == "https://maps.app.goo.gl/abc123"
+    assert exc_info.value.reason

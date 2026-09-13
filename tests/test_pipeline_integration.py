@@ -1,4 +1,5 @@
 from cartocrisp.bbox import BBox
+from cartocrisp.link_parser import LinkResolutionError
 from cartocrisp.pipeline import GenerateOptions, GenerationError, generate
 
 
@@ -31,3 +32,18 @@ def test_generate_rejects_unrecognized_link(tmp_path, overpass_fixture):
         assert False, "expected GenerationError"
     except GenerationError as exc:
         assert "not a link at all" in str(exc)
+
+
+def test_generate_converts_link_resolution_error(tmp_path, overpass_fixture, monkeypatch):
+    def fake_resolve_short_link(raw_link):
+        raise LinkResolutionError("https://maps.app.goo.gl/abc123", "connection refused")
+
+    monkeypatch.setattr("cartocrisp.pipeline.resolve_short_link", fake_resolve_short_link)
+
+    options = GenerateOptions(output_path=tmp_path / "map.svg", locale="en")
+
+    try:
+        generate("https://maps.app.goo.gl/abc123", options, overpass_client=FakeOverpassClient(overpass_fixture))
+        assert False, "expected GenerationError"
+    except GenerationError as exc:
+        assert "https://maps.app.goo.gl/abc123" in str(exc)

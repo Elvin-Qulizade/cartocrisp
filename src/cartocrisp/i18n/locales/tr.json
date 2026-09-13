@@ -3,5 +3,6 @@
   "generate.success": "{path} kaydedildi",
   "error.unrecognized_link": "Bu bağlantı tanınmadı: {input}. Desteklenen formatlar: Google Haritalar bağlantısı, OpenStreetMap bağlantısı veya 'enlem,boylam,zoom'.",
   "error.area_too_large": "Seçilen alan ({area:.1f} km²) çok büyük (maksimum {max_area:.1f} km²). Daha yüksek yakınlaştırma deneyin.",
-  "error.overpass_unavailable": "OpenStreetMap veri sunucularına birden fazla denemeden sonra ulaşılamadı: {reason}"
+  "error.overpass_unavailable": "OpenStreetMap veri sunucularına birden fazla denemeden sonra ulaşılamadı: {reason}",
+  "error.link_resolution_failed": "Kısaltılmış bağlantı çözümlenemedi {input}: {reason}"
 }
