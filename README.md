@@ -1,15 +1,42 @@
 # cartocrisp
 
-Generate crisp, infinitely-zoomable vector map snapshots from a map link.
+Generate a crisp, infinitely-zoomable **vector** map snapshot (SVG or PDF) from a map link — street names and details stay sharp at any zoom level, because the output is real vector data, not a raster screenshot.
 
-## Installation
+## Why
+
+Standard map screenshots blur when you zoom in. cartocrisp pulls OpenStreetMap vector data for the area your link points to and renders it directly to SVG/PDF, so the result never pixelates.
+
+## Usage
+
+No pre-installed Python required — the launcher scripts bootstrap everything via [uv](https://github.com/astral-sh/uv).
 
 ```bash
-pip install -e ".[dev]"
+# macOS / Linux
+./cartocrisp.sh "https://www.google.com/maps/@40.4093,49.8671,16z" -o baku.svg
+
+# Windows
+./cartocrisp.ps1 "https://www.google.com/maps/@40.4093,49.8671,16z" -o baku.svg
 ```
 
-## Testing
+Options:
+- `-o, --output` — output file path (`.svg` or `.pdf`)
+- `--width`, `--height` — canvas size in pixels (default 1600x1200)
+- `--lang` — `az`, `en`, `tr`, or `ru` (default: your OS locale, falling back to English)
+
+Supported link formats: Google Maps URLs (including shortened `maps.app.goo.gl` links), OpenStreetMap URLs, or a plain `lat,lon,zoom` string.
+
+### Web UI
 
 ```bash
-pytest tests/
+./cartocrisp.sh web
 ```
+
+Opens a local page at `http://127.0.0.1:8765` where you can paste a link and download the result.
+
+## Data & Licensing
+
+Map data comes from [OpenStreetMap](https://www.openstreetmap.org) via the public Overpass API and is licensed under the [ODbL](https://opendatacommons.org/licenses/odbl/) — every generated file includes the required "© OpenStreetMap contributors" attribution.
+
+The public Overpass API has fair-use limits. For heavy use, run your own Overpass instance and pass its URL(s) to `OverpassClient(mirrors=[...])` (see `src/cartocrisp/overpass.py`).
+
+This project is MIT licensed.
