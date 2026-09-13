@@ -13,6 +13,11 @@ DEFAULT_MIRRORS = (
     "https://overpass.kumi.systems/api/interpreter",
 )
 DEFAULT_CACHE_PATH = Path.home() / ".cache" / "cartocrisp" / "overpass_cache.sqlite3"
+# Real dense-city-center queries were measured at 27-37s against a healthy
+# mirror, with occasional much slower responses under public-API load;
+# 25/30s left too little margin and caused real, reported timeouts.
+DEFAULT_QUERY_TIMEOUT = 80
+DEFAULT_HTTP_TIMEOUT = 90.0
 
 
 class OverpassUnavailableError(Exception):
@@ -24,7 +29,7 @@ class OverpassUnavailableError(Exception):
 def build_query(bbox: BBox) -> str:
     box = f"{bbox.min_lat},{bbox.min_lon},{bbox.max_lat},{bbox.max_lon}"
     return f"""
-[out:json][timeout:25];
+[out:json][timeout:{DEFAULT_QUERY_TIMEOUT}];
 (
   way["highway"]({box});
   way["building"]({box});
@@ -44,7 +49,7 @@ class OverpassClient:
     def __init__(self, mirrors=DEFAULT_MIRRORS, cache_path=None, http_client=None):
         self.mirrors = mirrors
         self.cache_path = Path(cache_path) if cache_path is not None else DEFAULT_CACHE_PATH
-        self._client = http_client or httpx.Client(timeout=30.0)
+        self._client = http_client or httpx.Client(timeout=DEFAULT_HTTP_TIMEOUT)
         self._init_cache()
 
     def fetch(self, bbox: BBox) -> dict:
@@ -63,6 +68,13 @@ class OverpassClient:
                     payload = response.json()
                     self._write_cache(key, payload)
                     return payload
+                except httpx.HTTPStatusError as exc:
+                    last_error = exc
+                    if 400 <= exc.response.status_code < 500:
+                        # A client error means this mirror will never succeed for
+                        # this request - don't burn retries/backoff on it, move on.
+                        break
+                    time.sleep(2 ** attempt)
                 except (httpx.HTTPError, ValueError) as exc:
                     last_error = exc
                     time.sleep(2 ** attempt)

@@ -25,6 +25,8 @@ Options:
 
 Supported link formats: Google Maps URLs (including shortened `maps.app.goo.gl` links), OpenStreetMap URLs, or a plain `lat,lon,zoom` string.
 
+**Note on speed:** cartocrisp fetches live data from the free, shared Overpass API. For a dense city center at street-level zoom, a request can legitimately take 30-90 seconds, and occasionally longer under heavy public load — this is normal, not a hang. If a request fails with "Could not reach OpenStreetMap data servers," it's almost always the shared public API being slow or rate-limiting, not a bug — wait a bit and retry, try a smaller `--width`/`--height`, or self-host Overpass for reliable/heavy use (see below).
+
 ### Web UI
 
 ```bash
