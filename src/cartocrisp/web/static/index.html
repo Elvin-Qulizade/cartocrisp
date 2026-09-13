@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cartocrisp</title>
+<style>
+  body { font-family: sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+  input, select, button { font-size: 1rem; padding: 6px; }
+  #result { margin-top: 20px; }
+  #result img { max-width: 100%; border: 1px solid #ccc; }
+</style>
+</head>
+<body>
+  <h1>cartocrisp</h1>
+  <p>Paste a Google Maps, OpenStreetMap, or "lat,lon,zoom" link:</p>
+  <input id="link" type="text" placeholder="Paste a map link" size="50">
+  <select id="lang">
+    <option value="en">English</option>
+    <option value="az">Azərbaycanca</option>
+    <option value="tr">Türkçe</option>
+    <option value="ru">Русский</option>
+  </select>
+  <button onclick="generateMap()">Generate</button>
+  <div id="result"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
