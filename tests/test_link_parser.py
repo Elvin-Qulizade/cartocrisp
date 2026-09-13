@@ -8,6 +8,14 @@ GOOGLE_PLACE = (
     "https://www.google.com/maps/place/Some+Place/@40.4093,49.8671,15z/"
     "data=!4m5!3m4!1s0x0:0x0!8m2!3d40.4093!4d49.8671"
 )
+GOOGLE_PLACE_NO_AT_WITH_ZOOM = (
+    "https://www.google.com/maps/place/Some+Place/"
+    "data=!4m5!3m4!1s0x0:0x0!8m2!3d40.4093!4d49.8671!16z"
+)
+GOOGLE_PLACE_NO_AT_NO_ZOOM = (
+    "https://www.google.com/maps/place/Some+Place/"
+    "data=!4m5!3m4!1s0x0:0x0!8m2!3d40.4093!4d49.8671"
+)
 OSM_HASH = "https://www.openstreetmap.org/#map=14/40.4093/49.8671"
 PLAIN = "40.4093,49.8671,16"
 
@@ -26,6 +34,20 @@ def test_parse_link_recognized_formats(raw_input, expected):
 
 def test_parse_link_google_place_url():
     result = parse_link(GOOGLE_PLACE)
+    assert result.lat == 40.4093
+    assert result.lon == 49.8671
+    assert result.zoom == 15.0
+
+
+def test_parse_link_3d4d_with_separate_zoom_marker():
+    result = parse_link(GOOGLE_PLACE_NO_AT_WITH_ZOOM)
+    assert result.lat == 40.4093
+    assert result.lon == 49.8671
+    assert result.zoom == 16.0
+
+
+def test_parse_link_3d4d_defaults_to_zoom_15_when_no_zoom_marker():
+    result = parse_link(GOOGLE_PLACE_NO_AT_NO_ZOOM)
     assert result.lat == 40.4093
     assert result.lon == 49.8671
     assert result.zoom == 15.0
