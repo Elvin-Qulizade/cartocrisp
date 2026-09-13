@@ -1,0 +1,7 @@
+{
+  "attribution.osm": "© OpenStreetMap tərəkilçiləri",
+  "generate.success": "{path} yadda saxlanıldı",
+  "error.unrecognized_link": "Bu link tanınmadı: {input}. Dəstəklənən formatlar: Google Maps linki, OpenStreetMap linki, və ya 'enlik,uzunluq,zoom'.",
+  "error.area_too_large": "Seçilmiş ərazi ({area:.1f} km²) çox böyükdür (maksimum {max_area:.1f} km²). Daha yüksək zoom səviyyəsi seçin.",
+  "error.overpass_unavailable": "OpenStreetMap data serverlərinə birləşmək mümkün olmadı: {reason}"
+}

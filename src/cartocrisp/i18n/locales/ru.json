@@ -1,0 +1,7 @@
+{
+  "attribution.osm": "© участники OpenStreetMap",
+  "generate.success": "Сохранено {path}",
+  "error.unrecognized_link": "Не удалось распознать ссылку: {input}. Поддерживаемые форматы: ссылка Google Карт, ссылка OpenStreetMap или 'широта,долгота,зум'.",
+  "error.area_too_large": "Запрошенная область ({area:.1f} км²) слишком большая (максимум {max_area:.1f} км²). Попробуйте больший масштаб.",
+  "error.overpass_unavailable": "Не удалось подключиться к серверам данных OpenStreetMap после нескольких попыток: {reason}"
+}

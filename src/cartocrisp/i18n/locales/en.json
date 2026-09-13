@@ -1,0 +1,7 @@
+{
+  "attribution.osm": "© OpenStreetMap contributors",
+  "generate.success": "Saved {path}",
+  "error.unrecognized_link": "Could not recognize the location link: {input}. Supported formats: Google Maps URL, OpenStreetMap URL, or 'lat,lon,zoom'.",
+  "error.area_too_large": "Requested area ({area:.1f} km²) is too large (max {max_area:.1f} km²). Try a higher zoom level.",
+  "error.overpass_unavailable": "Could not reach OpenStreetMap data servers after multiple attempts: {reason}"
+}
